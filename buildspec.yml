@@ -1,11 +1,12 @@
 version: 0.2
 
 env:
+  env:
   variables:
-    AWS_DEFAULT_REGION: us-west-2             # update to your region
-    IMAGE_REPO_NAME: my-app-repo              # your ECR repo name
+    AWS_DEFAULT_REGION: us-west-2
+    IMAGE_REPO_NAME: simple-docker-service-02c95c63953b
     IMAGE_TAG: latest
-    ACCOUNT_ID: 975049956388                  # your AWS Account ID
+    ACCOUNT_ID: 975049956388
 
 phases:
   pre_build:
