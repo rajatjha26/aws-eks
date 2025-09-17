@@ -1,0 +1,17 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo "Setting up kubectl..."
+      - aws --version
+      - aws eks update-kubeconfig --region us-west-2 --name my-eks-cluster
+  build:
+    commands:
+      - echo "Deploying to EKS..."
+      - kubectl apply -f k8s/deployment.yaml
+      - kubectl apply -f k8s/service.yaml
+  post_build:
+    commands:
+      - echo "Verify rollout status..."
+      - kubectl rollout status deployment/my-app-deployment
