@@ -1,20 +1,30 @@
 version: 0.2
 
+env:
+  variables:
+    AWS_DEFAULT_REGION: ap-south-1
+    IMAGE_REPO_NAME: fastapi-app
+    IMAGE_TAG: latest
+    ACCOUNT_ID: 975049956388
+
 phases:
   pre_build:
     commands:
-      - echo "Setting up kubectl..."
+      - echo "Logging in to Amazon ECR..."
       - aws --version
-      - aws eks update-kubeconfig --region ap-south-1 --name my-cluster
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
   build:
     commands:
-      - echo "Updating deployment image..."
-      - IMAGE_URI=975049956388.dkr.ecr.ap-south-1.amazonaws.com/my-app-repo:latest
-      - sed -i "s|image: .*|image: $IMAGE_URI|g" k8s/deployment.yaml
-      - echo "Deploying to EKS..."
-      - kubectl apply -f k8s/deployment.yaml
-      - kubectl apply -f k8s/service.yaml
+      - echo "Building the Docker image..."
+      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
+      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
   post_build:
     commands:
-      - echo "Verify rollout status..."
-      - kubectl rollout status deployment/my-app-deployment
+      - echo "Pushing the Docker image to ECR..."
+      - docker push $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+      - echo "Writing image definitions file..."
+      - printf '[{"name":"my-app","imageUri":"%s"}]' $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG > imagedefinitions.json
+
+artifacts:
+  files:
+    - imagedefinitions.json
