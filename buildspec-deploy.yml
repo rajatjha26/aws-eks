@@ -5,9 +5,12 @@ phases:
     commands:
       - echo "Setting up kubectl..."
       - aws --version
-      - aws eks update-kubeconfig --region ap-south-1 --name my-eks-cluster
+      - aws eks update-kubeconfig --region ap-south-1 --name my-cluster
   build:
     commands:
+      - echo "Updating deployment image..."
+      - IMAGE_URI=975049956388.dkr.ecr.ap-south-1.amazonaws.com/my-app-repo:latest
+      - sed -i "s|image: .*|image: $IMAGE_URI|g" k8s/deployment.yaml
       - echo "Deploying to EKS..."
       - kubectl apply -f k8s/deployment.yaml
       - kubectl apply -f k8s/service.yaml
