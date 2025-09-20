@@ -1,7 +1,6 @@
 version: 0.2
 
 env:
-  env:
   variables:
     AWS_DEFAULT_REGION: ap-south-1
     IMAGE_REPO_NAME: fastapi-app
