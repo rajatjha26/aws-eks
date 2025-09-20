@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: my-app
-          image: 975049956388.dkr.ecr.us-west-2.amazonaws.com/my-app-repo:latest
+          image: 975049956388.dkr.ecr.ap-south-1.amazonaws.com/fastapi-app
           ports:
             - containerPort: 80
