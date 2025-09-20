@@ -2,10 +2,10 @@ version: 0.2
 
 env:
   variables:
-    AWS_DEFAULT_REGION: ap-south-1
-    IMAGE_REPO_NAME: fastapi-app
-    IMAGE_TAG: latest
-    ACCOUNT_ID: 975049956388
+    AWS_DEFAULT_REGION: "ap-south-1"
+    IMAGE_REPO_NAME: "fastapi-app"
+    IMAGE_TAG: "latest"
+    ACCOUNT_ID: "975049956388"
 
 phases:
   pre_build:
@@ -26,4 +26,5 @@ phases:
       - printf '[{"name":"my-app","imageUri":"%s"}]' $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG > imagedefinitions.json
 
 artifacts:
-  files: imagedefinitions.json
+  files:
+    - imagedefinitions.json
