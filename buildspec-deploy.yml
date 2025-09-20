@@ -5,7 +5,7 @@ phases:
     commands:
       - echo "Setting up kubectl..."
       - aws --version
-      - aws eks update-kubeconfig --region us-west-2 --name my-eks-cluster
+      - aws eks update-kubeconfig --region ap-south-1 --name my-eks-cluster
   build:
     commands:
       - echo "Deploying to EKS..."
